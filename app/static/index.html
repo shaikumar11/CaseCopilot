@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CaseCopilot</title><style>:root{--bg:#f4f6fa;--card:#fff;--tx:#1b2430;--mut:#667085;--line:#e4e8ef;--pri:#1F4E79;--onpri:#fff;--ok:#15803d;--okb:#dcfce7;--wa:#b45309;--wab:#fef3c7;--er:#b91c1c;--erb:#fee2e2;--in:#eef2f8}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#18222d;--tx:#e6edf5;--mut:#93a1b3;--line:#2a3745;--pri:#5aa2e0;--onpri:#0b1620;--ok:#4ade80;--okb:#14391f;--wa:#fbbf24;--wab:#3d2f0a;--er:#f87171;--erb:#431616;--in:#101a24}}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 Arial,Helvetica,sans-serif}
+#login{min-height:100vh;display:grid;place-items:center;padding:16px}.lg{width:340px;text-align:center}.lg .logo{margin:0 auto 8px}.lg h1{margin:0}
+.mut,.hint,.note{color:var(--mut);font-size:12px}.hint{margin-top:10px}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{width:36px;height:36px;border-radius:9px;background:var(--pri);color:var(--onpri);display:grid;place-items:center;font-weight:700}
+header h1{font-size:18px;margin:0}header small{color:var(--mut);display:block;font-size:12px}.me{margin-left:auto;display:flex;align-items:center;gap:10px;color:var(--mut)}
+main{max-width:1150px;margin:0 auto;padding:20px 16px 40px}.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}.kpi span{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.04em}.kpi b{display:block;font-size:26px;margin-top:4px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:12px;margin-bottom:16px}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+h2{font-size:15px;margin:0 0 12px}label{display:block;color:var(--mut);font-size:12px;margin:10px 0 4px;text-align:left}
+input,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--in);color:var(--tx);font:inherit}textarea{min-height:70px}
+button{padding:8px 12px;border:0;border-radius:8px;background:var(--pri);color:var(--onpri);font:inherit;font-weight:600;cursor:pointer;margin:4px 4px 0 0}button.ghost{background:transparent;color:var(--tx);border:1px solid var(--line)}
+.submit{width:100%;margin-top:14px;padding:10px}.tr{display:grid;grid-template-columns:90px 1fr 100px;gap:8px;align-items:center;margin-bottom:10px;font-size:13px}.bar{background:var(--in);border-radius:6px;height:10px}.bar i{display:block;height:10px;border-radius:6px;background:var(--pri)}
+.board{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:10px;overflow-x:auto}.col{background:var(--in);border-radius:12px;padding:10px;min-height:160px}.col h3{margin:0 0 8px;font-size:13px}.col h3 small{color:var(--mut)}
+.deal{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px}.amt{font-weight:700;margin:4px 0}.empty{color:var(--mut);text-align:center;padding:14px}
+.item{padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer}.item.sel{border-color:var(--pri);background:var(--in)}
+.pill{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:var(--in);border:1px solid var(--line);text-transform:capitalize}
+.drafted,.sent,.normal{background:var(--okb);color:var(--ok)}.new{background:var(--in)}.escalated,.high{background:var(--erb);color:var(--er)}
+.step{border-left:3px solid var(--pri);padding:4px 10px;margin:8px 0}.step b{color:var(--pri)}.reply{background:var(--in);border-radius:10px;padding:10px;margin-top:8px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--pri);color:var(--onpri);padding:10px 18px;border-radius:10px;opacity:0;transition:.25s;pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,0)}#toast.bad{background:var(--er);color:#fff}
+</style></head><body>
+<section id="login"><form class="card lg" onsubmit="login(event)"><div class="logo">C</div><h1>CaseCopilot</h1><p class="mut">AI agent that triages support cases</p><label>Username</label><input id="lu" value="meera"><label>Password</label><input id="lp" type="password" value="demo123"><button class="submit">Sign in</button><p class="hint">Demo accounts: meera (manager), asha and ravi (reps). Password: demo123</p></form></section>
+<div id="app" hidden><header><div class="logo">C</div><div><h1>CaseCopilot</h1><small>AI agent that triages support cases</small></div><div class="me"><span id="who"></span><button class="ghost" onclick="logout()">Sign out</button></div></header><main><section class="kpis"><div class="card kpi"><span>Total cases</span><b id="k1">0</b></div><div class="card kpi"><span>Auto draft rate</span><b id="k2">0</b></div><div class="card kpi"><span>Escalated to human</span><b id="k3">0</b></div><div class="card kpi"><span>Sent to customer</span><b id="k4">0</b></div></section>
+<div class="grid"><div><form class="card" onsubmit="addCase(event)" style="margin-bottom:12px"><h2>New case</h2><label>Customer</label><input id="cn" required><label>Subject</label><input id="cs" required><label>Message</label><textarea id="cb" required></textarea><button class="submit">Create case</button></form><div class="card"><h2>Cases</h2><div id="list"></div></div></div>
+<div class="card" id="detail"></div></div>
+</main></div><div id="toast"></div><script>const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let TOKEN=localStorage.getItem('t'),ME=JSON.parse(localStorage.getItem('u')||'null');
+async function api(u,b){const h={'Content-Type':'application/json'};if(TOKEN)h.Authorization='Bearer '+TOKEN;
+ const r=await fetch(u,{method:b?'POST':'GET',headers:h,body:b?JSON.stringify(b):undefined});const d=await r.json();
+ if(r.status===401&&TOKEN&&u!=='/api/login')logout();if(!r.ok)throw new Error(typeof d.detail==='string'?d.detail:'Please check the input');return d}
+function toast(m,bad){const t=$('#toast');t.textContent=m;t.className='show'+(bad?' bad':'');clearTimeout(toast.h);toast.h=setTimeout(()=>t.className='',3000)}
+async function login(e){e.preventDefault();try{const d=await api('/api/login',{username:$('#lu').value.trim(),password:$('#lp').value});
+ TOKEN=d.token;ME=d.user;localStorage.setItem('t',TOKEN);localStorage.setItem('u',JSON.stringify(ME));boot()}catch(x){toast(x.message,1)}}
+function logout(){localStorage.clear();TOKEN=null;ME=null;boot()}
+function boot(){$('#login').hidden=!!ME;$('#app').hidden=!ME;if(ME){$('#who').textContent=ME.username+' ('+ME.role+')';start()}}
+let CASES=[],SEL=null;
+const pill=s=>`<span class="pill ${s}">${s}</span>`;
+async function start(){CASES=await api('/api/cases');const s=await api('/api/stats');
+ $('#k1').textContent=s.total;$('#k2').textContent=s.auto_draft_rate+'%';$('#k3').textContent=s.escalated;$('#k4').textContent=s.sent;
+ if(!CASES.find(c=>c.id===SEL))SEL=CASES.length?CASES[0].id:null;render()}
+function render(){$('#list').innerHTML=CASES.map(c=>`<div class="item ${c.id===SEL?'sel':''}" onclick="SEL=${c.id};render()"><b>${esc(c.subject)}</b><div class="note">${esc(c.customer)}</div>${pill(c.status)} ${pill(c.priority)}</div>`).join('')||'<div class="empty">No cases yet</div>';
+ const c=CASES.find(x=>x.id===SEL);if(!c){$('#detail').innerHTML='<div class="empty">Select a case</div>';return}
+ $('#detail').innerHTML=`<h2>${esc(c.subject)}</h2><div class="note">${esc(c.customer)} ${pill(c.status)} ${pill(c.priority)}</div><p>${esc(c.body)}</p>
+ ${c.status==='new'?`<button onclick="runAgent(${c.id})">Run AI agent</button>`:''}
+ ${c.trace.length?'<h2>Agent trace</h2>'+c.trace.map(t=>`<div class="step"><b>${esc(t.tool)}</b> <span class="note">${esc(t.input)}</span><div>${esc(t.output)}</div></div>`).join(''):''}
+ ${c.reply?`<div class="reply"><div class="note">Draft reply</div>${esc(c.reply)}</div>`:''}
+ ${c.status==='drafted'&&ME.role==='manager'?`<button onclick="approve(${c.id})">Approve and send</button>`:''}
+ ${c.status==='drafted'&&ME.role!=='manager'?'<p class="hint">A manager must approve this reply before it is sent.</p>':''}`}
+async function runAgent(id){try{await api('/api/cases/'+id+'/run',{});toast('Agent finished')}catch(x){toast(x.message,1)}start()}
+async function approve(id){try{await api('/api/cases/'+id+'/approve',{});toast('Reply sent')}catch(x){toast(x.message,1)}start()}
+async function addCase(e){e.preventDefault();try{const c=await api('/api/cases',{customer:$('#cn').value.trim(),subject:$('#cs').value.trim(),body:$('#cb').value.trim()});SEL=c.id;e.target.reset();toast('Case created')}catch(x){toast(x.message,1)}start()}
+
+boot()</script></body></html>
