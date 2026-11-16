@@ -1,7 +1,7 @@
 # CaseCopilot
 
 <p align="center">
-  <img src="assets/banner.svg" alt="CaseCopilot" width="100%">
+  <img src="banner.svg" alt="CaseCopilot" width="100%">
 </p>
 
 <p align="center">
@@ -44,7 +44,7 @@ The free server may take some time to wake up on the first visit.
 ## Case lifecycle
 
 <p align="center">
-  <img src="assets/flow.svg" alt="CaseCopilot workflow" width="100%">
+  <img src="flow.svg" alt="CaseCopilot workflow" width="100%">
 </p>
 
 A case moves through the following statuses:
